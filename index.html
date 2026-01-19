@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dimitrios Athinaios - Data Science Portfolio</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="DA2.png">
+    <link rel="shortcut icon" type="image/png" href="DA2.png">
+    <link rel="apple-touch-icon" href="DA2.png">
+    
+    <!-- Social Preview / Open Graph -->
+    <meta property="og:title" content="Dimitrios Athinaios - Data Science Portfolio">
+    <meta property="og:description" content="Data Scientist and UCL MSc student specializing in AI/ML Engineering, cloud-native solutions, and scalable machine learning systems.">
+    <meta property="og:image" content="DA2.png">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dimitrios Athinaios - Data Science Portfolio">
+    <meta name="twitter:description" content="Data Scientist and UCL MSc student specializing in AI/ML Engineering, cloud-native solutions, and scalable machine learning systems.">
+    <meta name="twitter:image" content="DA2.png">
     <style>
         * {
             margin: 0;
@@ -48,7 +65,7 @@
         }
 
         header {
-            min-height: 100vh;
+            min-height: 90vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -56,6 +73,7 @@
             text-align: center;
             position: relative;
             padding: 20px;
+            padding-bottom: 80px;
         }
 
         .logo-container {
@@ -63,7 +81,7 @@
         }
 
         .logo-svg {
-            width: clamp(180px, 35vw, 280px);
+            width: clamp(150px, 28vw, 220px);
             height: auto;
         }
 
@@ -220,6 +238,7 @@
             position: relative;
             overflow: hidden;
             display: flex;
+            flex-direction: column;
             gap: 30px;
             align-items: flex-start;
         }
@@ -239,10 +258,17 @@
             left: 100%;
         }
 
+        .about-content {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            width: 100%;
+        }
+
         .about-image {
-            width: 200px;
-            height: 200px;
-            min-width: 200px;
+            width: 150px;
+            height: 150px;
+            min-width: 150px;
             border-radius: 10px;
             border: 3px solid var(--accent-green);
             object-fit: cover;
@@ -273,16 +299,67 @@
             font-weight: bold;
         }
 
+        .skills-section {
+            width: 100%;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .skills-section h3 {
+            color: var(--accent-green);
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-category h4 {
+            color: var(--accent-green);
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
         @media (max-width: 768px) {
-            .about-container {
+            .about-content {
                 flex-direction: column;
                 align-items: center;
+                text-align: center;
             }
 
             .about-image {
-                width: 150px;
-                height: 150px;
-                min-width: 150px;
+                width: 120px;
+                height: 120px;
+                min-width: 120px;
+            }
+
+            .about-text p::before {
+                display: none;
+            }
+
+            .about-text p {
+                padding-left: 0;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .skills-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -685,7 +762,7 @@
             }
 
             .scroll-indicator {
-                bottom: 20px;
+                display: none;
             }
         }
 
@@ -755,8 +832,8 @@
 
         <section class="section">
             <h2 class="section-title">About</h2>
-            <div class="about-container" style="flex-direction: column;">
-                <div style="display: flex; gap: 30px; align-items: flex-start; width: 100%;">
+            <div class="about-container">
+                <div class="about-content">
                     <svg class="about-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="background: var(--bg-secondary);">
                         <circle cx="100" cy="50" r="20" fill="none" stroke="#00ff41" stroke-width="3"/>
                         <line x1="100" y1="70" x2="100" y2="130" stroke="#00ff41" stroke-width="3"/>
@@ -771,21 +848,21 @@
                     </div>
                 </div>
                 
-                <div style="width: 100%; padding-top: 30px; margin-top: 30px; border-top: 2px solid var(--border-color);">
-                    <h3 style="color: var(--accent-green); font-size: 1.5em; margin-bottom: 20px;">Technical Skills</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                        <div>
-                            <h4 style="color: var(--accent-green); font-size: 1.1em; margin-bottom: 10px;">Languages</h4>
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <div class="skills-section">
+                    <h3>Technical Skills</h3>
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h4>Languages</h4>
+                            <div class="skill-tags">
                                 <span class="skill-tag-pipeline">Python</span>
                                 <span class="skill-tag-pipeline">R</span>
                                 <span class="skill-tag-pipeline">SQL</span>
                                 <span class="skill-tag-pipeline">HTML/CSS</span>
                             </div>
                         </div>
-                        <div>
-                            <h4 style="color: var(--accent-green); font-size: 1.1em; margin-bottom: 10px;">ML & Data Science</h4>
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <div class="skill-category">
+                            <h4>ML & Data Science</h4>
+                            <div class="skill-tags">
                                 <span class="skill-tag-pipeline">Scikit-learn</span>
                                 <span class="skill-tag-pipeline">XGBoost</span>
                                 <span class="skill-tag-pipeline">TensorFlow</span>
@@ -793,27 +870,27 @@
                                 <span class="skill-tag-pipeline">Keras</span>
                             </div>
                         </div>
-                        <div>
-                            <h4 style="color: var(--accent-green); font-size: 1.1em; margin-bottom: 10px;">Tools & Platforms</h4>
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <div class="skill-category">
+                            <h4>Tools & Platforms</h4>
+                            <div class="skill-tags">
                                 <span class="skill-tag-pipeline">Databricks</span>
                                 <span class="skill-tag-pipeline">AWS</span>
                                 <span class="skill-tag-pipeline">Docker</span>
                                 <span class="skill-tag-pipeline">Git</span>
                             </div>
                         </div>
-                        <div>
-                            <h4 style="color: var(--accent-green); font-size: 1.1em; margin-bottom: 10px;">Visualization</h4>
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <div class="skill-category">
+                            <h4>Visualization</h4>
+                            <div class="skill-tags">
                                 <span class="skill-tag-pipeline">Power BI</span>
                                 <span class="skill-tag-pipeline">Tableau</span>
                                 <span class="skill-tag-pipeline">Matplotlib</span>
                                 <span class="skill-tag-pipeline">Seaborn</span>
                             </div>
                         </div>
-                        <div>
-                            <h4 style="color: var(--accent-green); font-size: 1.1em; margin-bottom: 10px;">Development</h4>
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <div class="skill-category">
+                            <h4>Development</h4>
+                            <div class="skill-tags">
                                 <span class="skill-tag-pipeline">Jupyter</span>
                                 <span class="skill-tag-pipeline">RStudio</span>
                                 <span class="skill-tag-pipeline">Excel</span>
@@ -1121,5 +1198,3 @@
             if (!isExpanded) {
                 card.classList.add('expanded');
                 card.querySelector('.expand-icon').textContent = '−
-
-
