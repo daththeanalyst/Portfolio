@@ -433,18 +433,32 @@
             display: block;
         }
 
+                /* Remove display: none/block and use max-height instead */
         .project-full-desc {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0;
+            padding-top: 0;
+            border-top: 1px solid transparent;
+            transition: all 0.5s ease-in-out; /* Smooth transition */
             color: var(--text-secondary);
             line-height: 1.8;
         }
-
+        
+        /* When expanded, give it enough height to show content */
         .project-card.expanded .project-full-desc {
-            display: block;
-            animation: fadeIn 0.3s;
+            max-height: 1000px; /* Large enough number to fit content */
+            opacity: 1;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* Optional: Smooth out the grid movement */
+        .project-card {
+            /* ... keep your existing styles ... */
+            height: fit-content; /* Ensure card shrinks/grows with content */
         }
 
         .project-card.expanded {
@@ -1188,13 +1202,27 @@
         });
 
         function toggleProject(card) {
-            const isExpanded = card.classList.contains('expanded');
-            
-            document.querySelectorAll('.project-card.expanded').forEach(c => {
-                c.classList.remove('expanded');
-                c.querySelector('.expand-icon').textContent = '+';
-            });
-            
-            if (!isExpanded) {
-                card.classList.add('expanded');
-                card.querySelector('.expand-icon').textContent = '−
+    // 1. Check if the user clicked a link or button inside the card
+    if (event.target.closest('a') || event.target.closest('button')) {
+        return; // Do nothing if a link was clicked
+    }
+
+    const isExpanded = card.classList.contains('expanded');
+    
+    // 2. Close ALL other open cards first
+    document.querySelectorAll('.project-card.expanded').forEach(c => {
+        if (c !== card) { // Don't collapse the current one yet if we are about to toggle it
+            c.classList.remove('expanded');
+            c.querySelector('.expand-icon').textContent = '+';
+        }
+    });
+    
+    // 3. Toggle the clicked card
+    if (isExpanded) {
+        card.classList.remove('expanded');
+        card.querySelector('.expand-icon').textContent = '+';
+    } else {
+        card.classList.add('expanded');
+        card.querySelector('.expand-icon').textContent = '−';
+    }
+}
