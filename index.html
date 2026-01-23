@@ -1114,113 +1114,94 @@
         </section>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
+    <script>
+    /* --- 1. MATRIX RAIN EFFECT --- */
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas to full screen
+    function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
+    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
 
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00ff41';
-            ctx.font = fontSize + 'px monospace';
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00ff41';
+        ctx.font = fontSize + 'px monospace';
 
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
+        for (let i = 0; i < drops.length; i++) {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
             }
+            drops[i]++;
         }
+    }
+    setInterval(drawMatrix, 50);
 
-        setInterval(drawMatrix, 50);
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        const sections = document.querySelectorAll('.section');
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        sections.forEach(section => observer.observe(section));
-
-        document.querySelector('.scroll-indicator').addEventListener('click', () => {
+    /* --- 2. SCROLL INDICATOR --- */
+    // Only try to add listener if element exists
+    const scrollInd = document.querySelector('.scroll-indicator');
+    if (scrollInd) {
+        scrollInd.addEventListener('click', () => {
             document.querySelector('.section').scrollIntoView({ behavior: 'smooth' });
         });
+    }
 
-        let lastTrailTime = 0;
-        const trailDelay = 50;
-
-        document.addEventListener('mousemove', (e) => {
-            const now = Date.now();
-            if (now - lastTrailTime < trailDelay) return;
-            lastTrailTime = now;
-
-            const trail = document.createElement('div');
-            trail.style.cssText = `
-                position: fixed;
-                width: 4px;
-                height: 4px;
-                background: #00ff41;
-                border-radius: 50%;
-                pointer-events: none;
-                left: ${e.clientX}px;
-                top: ${e.clientY}px;
-                opacity: 0.5;
-                z-index: 9999;
-            `;
-            document.body.appendChild(trail);
-            setTimeout(() => {
-                trail.style.opacity = '0';
-                trail.style.transform = 'scale(2)';
-                trail.style.transition = 'all 0.5s';
-            }, 10);
-            setTimeout(() => trail.remove(), 500);
+    /* --- 3. SCROLL VISIBILITY --- */
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
         });
+    }, { threshold: 0.1 });
+    sections.forEach(section => observer.observe(section));
 
-        function toggleProject(card) {
-    // 1. Check if the user clicked a link or button inside the card
-    if (event.target.closest('a') || event.target.closest('button')) {
-        return; // Do nothing if a link was clicked
-    }
+    /* --- 4. PROJECT CARD TOGGLE (THE FIX) --- */
+    function toggleProject(card) {
+        // FIX: We explicitly define 'e' as the event window
+        var e = window.event;
 
-    const isExpanded = card.classList.contains('expanded');
-    
-    // 2. Close ALL other open cards first
-    document.querySelectorAll('.project-card.expanded').forEach(c => {
-        if (c !== card) { // Don't collapse the current one yet if we are about to toggle it
-            c.classList.remove('expanded');
-            c.querySelector('.expand-icon').textContent = '+';
+        // 1. If clicking a button or link (like GitHub), DO NOT expand the card
+        if (e && (e.target.closest('a') || e.target.closest('button'))) {
+            e.stopPropagation(); // Stop the click from triggering the card
+            return;
         }
-    });
-    
-    // 3. Toggle the clicked card
-    if (isExpanded) {
-        card.classList.remove('expanded');
-        card.querySelector('.expand-icon').textContent = '+';
-    } else {
-        card.classList.add('expanded');
-        card.querySelector('.expand-icon').textContent = '−';
-    }
-}
 
+        const isExpanded = card.classList.contains('expanded');
+        
+        // 2. Close ALL other open cards
+        document.querySelectorAll('.project-card.expanded').forEach(c => {
+            if (c !== card) { 
+                c.classList.remove('expanded');
+                let icon = c.querySelector('.expand-icon');
+                if(icon) icon.textContent = '+';
+            }
+        });
+        
+        // 3. Toggle the one you clicked
+        if (isExpanded) {
+            // Close it
+            card.classList.remove('expanded');
+            let icon = card.querySelector('.expand-icon');
+            if(icon) icon.textContent = '+';
+        } else {
+            // Open it
+            card.classList.add('expanded');
+            let icon = card.querySelector('.expand-icon');
+            if(icon) icon.textContent = '−'; // Note: This is a minus symbol
+        }
+    }
+</script>
