@@ -435,36 +435,33 @@
 
                 /* Remove display: none/block and use max-height instead */
         .project-full-desc {
+            /* CRITICAL: Do NOT use display: none here, or animation won't work */
+            display: block; 
+            
+            /* We hide it using height and opacity instead */
             max-height: 0;
             opacity: 0;
             overflow: hidden;
+            
+            /* Standard styling */
             margin-top: 0;
             padding-top: 0;
             border-top: 1px solid transparent;
-            transition: all 0.5s ease-in-out; /* Smooth transition */
             color: var(--text-secondary);
             line-height: 1.8;
-        }
-        
-        /* When expanded, give it enough height to show content */
-        .project-card.expanded .project-full-desc {
-            max-height: 1000px; /* Large enough number to fit content */
-            opacity: 1;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        /* Optional: Smooth out the grid movement */
-        .project-card {
-            /* ... keep your existing styles ... */
-            height: fit-content; /* Ensure card shrinks/grows with content */
+            
+            /* The Animation Magic */
+            transition: all 0.5s ease-in-out;
         }
 
-        .project-card.expanded {
-            grid-column: 1 / -1;
-        }
-
+/* This block tells it what to do when the 'expanded' class is added */
+.project-card.expanded .project-full-desc {
+    max-height: 1000px; /* Just a number larger than the content */
+    opacity: 1;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -1226,3 +1223,4 @@
         card.querySelector('.expand-icon').textContent = '−';
     }
 }
+
